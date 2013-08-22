@@ -1,0 +1,7 @@
+This is a shared program between my advisor and me for research on bolstered resubstitution error estimation for small sample size.
+
+main_svm.py: main program for generating different results to compare various error estimators.
+
+result_analysis.py: put results into understandable figures.
+
+test.py: self test for functions in main_svm.py.
