@@ -74,6 +74,7 @@ def FeaSelIsomap(X, y, d):
     D = X.shape[1]
     Ds = np.zeros((n, n))#nxn distance matrix
     Dis = np.zeros((n, n, D))#nxnxD distance matrix for each dimension
+    
     for dim in range(D):        
         for i in range(n):
             for j in range(i):
@@ -142,27 +143,30 @@ def min_dists_2sigma(X,y,FeaInd_d):
 
     X1d = Xd[ind1]
     X2d = Xd[ind2]
-    X1d.sort(axis=0)
-    X2d.sort(axis=0)
-    cpd = chi.ppf(PERCENTILE, len(FeaInd_d)) # degree of d
-    r1d = np.mean(abs(X1d[1:]-X1d[:-1]),axis=0)
-    r2d = np.mean(abs(X2d[1:]-X2d[:-1]),axis=0)     
-    sig1d = np.sqrt(np.dot(r1d, r1d))/cpd
-    sig2d = np.sqrt(np.dot(r2d, r2d))/cpd
-    sigs[0, FeaInd_d] = sig1d
-    sigs[1, FeaInd_d] = sig2d
+    # X1d.sort(axis=0)
+    # X2d.sort(axis=0)
+    # cpd = chi.ppf(PERCENTILE, len(FeaInd_d)) # degree of d
+    # r1d = np.mean(abs(X1d[1:]-X1d[:-1]),axis=0)
+    # r2d = np.mean(abs(X2d[1:]-X2d[:-1]),axis=0)     
+    # sig1d = np.sqrt(np.dot(r1d, r1d))/cpd
+    # sig2d = np.sqrt(np.dot(r2d, r2d))/cpd
+    # sigs[0, FeaInd_d] = sig1d
+    # sigs[1, FeaInd_d] = sig2d
+    sigs[:, FeaInd_d] = mean_min_dists(Xd, y)
+
 
     X1D_d = XD_d[ind1]
     X2D_d = XD_d[ind2]
-    X1D_d.sort(axis=0)
-    X2D_d.sort(axis=0)
-    cpD_d = chi.ppf(PERCENTILE, len(FeaInd_D_d)) # degree of D-d
-    r1D_d = np.mean(abs(X1D_d[1:]-X1D_d[:-1]),axis=0)
-    r2D_d = np.mean(abs(X2D_d[1:]-X2D_d[:-1]),axis=0)
-    sig1D_d = np.sqrt(np.dot(r1D_d, r1D_d))/cpD_d
-    sig2D_d = np.sqrt(np.dot(r2D_d, r2D_d))/cpD_d
-    sigs[0, FeaInd_D_d] = sig1D_d
-    sigs[1, FeaInd_D_d] = sig2D_d
+    # X1D_d.sort(axis=0)
+    # X2D_d.sort(axis=0)
+    # cpD_d = chi.ppf(PERCENTILE, len(FeaInd_D_d)) # degree of D-d
+    # r1D_d = np.mean(abs(X1D_d[1:]-X1D_d[:-1]),axis=0)
+    # r2D_d = np.mean(abs(X2D_d[1:]-X2D_d[:-1]),axis=0)
+    # sig1D_d = np.sqrt(np.dot(r1D_d, r1D_d))/cpD_d
+    # sig2D_d = np.sqrt(np.dot(r2D_d, r2D_d))/cpD_d
+    # sigs[0, FeaInd_D_d] = sig1D_d
+    # sigs[1, FeaInd_D_d] = sig2D_d
+    sigs[:, FeaInd_D_d] = mean_min_dists(XD_d, y)
     return sigs
 
 def mean_min_dists(X,y):
@@ -197,7 +201,7 @@ def mean_min_dists(X,y):
             d = np.dot(e,e.T)            
             if d<dm:
                 dm = d
-    tmp1[i]=np.sqrt(dm)
+        tmp1[i]=np.sqrt(dm)
     d1 = np.mean(tmp1)
     for i in range(n2):
         dm = sys.float_info.max;
@@ -211,9 +215,8 @@ def mean_min_dists(X,y):
             d = np.dot(e,e.T)            
             if d<dm:
                 dm = d
-    tmp2[i]=np.sqrt(dm)
+        tmp2[i]=np.sqrt(dm)
     d2 = np.mean(tmp2)
-
     cp = chi.ppf(PERCENTILE, p)
     sig1 = d1*np.ones(p)/cp
     sig2 = d2*np.ones(p)/cp
@@ -336,8 +339,8 @@ def brNew2sig(X_train, y_train, Xd_train, yd_train, FeaInd_d, MC=10):
     clf = svm.SVC(kernel='linear')
     clf.fit(Xd_train,yd_train)
     sigs = min_dists_2sigma(X_train,y_train, FeaInd_d)
-    sigs = sigs*np.sqrt(len(FeaInd_d))
-    sigs = sigs*np.std(X_train[FeaInd_d], axis=0)
+    # sigs = sigs*np.sqrt(len(FeaInd_d))
+    # sigs = sigs*np.std(X_train[FeaInd_d], axis=0)
 
     ind1 = y_train==0
     ind2 = y_train==1
@@ -414,6 +417,7 @@ def main():
     d0 = 15
     dt = 0.3
     stds= [0.5,1.0,2.0]
+    # stds= [1.0]
     N = 200
     for std in stds:
         for d in ds:

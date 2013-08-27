@@ -58,9 +58,53 @@ def test_dists():
         print sigs1*np.sqrt(d)
         print sigs2*np.sqrt(d)
         print sigs3*np.sqrt(d)
+        print sigs3
+
+# from datetime import datetime
+# def L2_distance(n, m):    
+#     import numpy as np
+#     import sys
+#     M, Dm = m.shape
+#     N, Dn = n.shape
+#     if Dm - Dn != 0:
+#         print 'n and m must have the same dimension d'
+#         sys.exit(0)    
+#     eN = np.ones(shape=[N, Dm])
+#     eM = np.ones(shape=[Dm, M])
+#     d_vect = np.sqrt(eN.dot((m**2).T) - 2*n.dot(m.T) + (n**2).dot(eM))
+#     return d_vect
+# def test():
+#     import numpy as np
+#     M = 20
+#     N = 20
+#     D = 100
+#     n = np.random.normal(size=[N, D])
+#     # m = n
+#     m = np.random.normal(size=[M, D])
+
+#     tstart = datetime.now()
+#     d_vect = L2_distance(n, m)
+#     tend = datetime.now()
+#     print tend - tstart
+    
+#     d_vect_sort = np.sort(d_vect, axis=0)
+#     print d_vect_sort[2]/d_vect_sort[1]
+
+#     d_for = np.zeros(shape=[N, M])
+#     tstart = datetime.now()
+#     for i in range(N):
+#         for j in range(M):
+#             d_for[i, j] = np.linalg.norm(n[i] - m[j])
+#     tend = datetime.now()
+#     print tend - tstart
+
+#     print np.linalg.norm(d_vect - d_for) < 1e-10*np.linalg.norm(d_for)
+
+# assert(np.linalg.norm(d_vect - d_for) < 1e-10*np.linalg.norm(d_for))
 def main():
     # test_FeaSel()
     test_dists()
+    # test()
 if __name__ == '__main__':
     print __doc__
     main()
